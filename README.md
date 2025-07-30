@@ -19,7 +19,6 @@ Well this is the program for you!
 ##  Requirements
 
 - Currently only Windows is supported
-- Python 3.8+
 - [Tosu](https://github.com/limjeck/tosu)
 ---
 
