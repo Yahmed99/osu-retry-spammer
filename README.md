@@ -8,6 +8,18 @@ Well this is the program for you!
 
 ---
 
+## Support & Feedback
+
+
+If this project helped you, consider [leaving a star on GitHub](https://github.com/Yahmed99/osu-retry-spammer/stargazers) — it really helps!
+
+If you encounter any issues or have suggestions:
+
+- [Open an issue or pull request](https://github.com/Yahmed99/osu-retry-spammer/issues)
+- Or reach out via Discord: **ppengy**
+
+---
+
 ##  Features
 
 -  Auto-retries maps when specified hit conditions are met
