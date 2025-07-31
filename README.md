@@ -6,6 +6,11 @@ Well this is the program for you!
 
 **Osu Retry Spammer** is a Python executable that automatically restarts osu! maps based on customizable hit conditions (number of 300s, 100s, 50s, or misses). It connects to the game using [Tosu](https://github.com/tosuapp/tosu) and provides a simple GUI to configure retry thresholds.
 
+> [!CAUTION]
+> I have foolishly developed tested this using only osu! stable. If you encounter any issues on **osu! Lazer** please note i am working on it and will hopefully get full lazer support.
+
+If you are a dev looking to help with Lazer support feel free to contact me or open a PR!
+
 ---
 
 ## Support & Feedback
@@ -32,6 +37,8 @@ If you encounter any issues or have suggestions:
 
 - Currently only Windows is supported
 - [Tosu](https://github.com/limjeck/tosu)
+
+  
 ---
 
 ## Setup
