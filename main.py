@@ -7,16 +7,19 @@ import settingsGUI
 import asyncio
 
 uri = "ws://127.0.0.1:24050/websocket/v2"
+retryCooldown = False
+
 
 # Function to retry using keybind
 def retry(key):
-    if key:
-        #tosu reports all 0s for stats until the map is reset, causing my code loop to retry twice
-        #resetting the hit dict here to prevent a double retry
-        settingsGUI.hitDict = {"300": 0, "100": 0, "50": 0, "0": 0, "Mods": 0}
+    global retryCooldown
+    if key and not retryCooldown:
         pyautogui.keyDown(key)
         time.sleep(0.25)
         pyautogui.keyUp(key)
+        retryCooldown = True
+    elif retryCooldown:
+        pass
     else:
         settingsGUI.key_error()
 
@@ -24,35 +27,45 @@ def retry(key):
 async def listen():
 
     async with websockets.connect(uri) as websocket:
-        (f"Connected to {uri}")
-
         while True:
             try:
+                global retryCooldown
                 # get data from tosu websocket
                 message = await websocket.recv()
                 data = json.loads(message)
-                #extract hits
-                newhits = data.get("play", {}).get("hits", {})
+                # extract necessary info
+                liveHits = data.get("play", {}).get("hits", {})
+                liveTime = int(data.get("beatmap", {}).get("time", {}).get("live", {}))
+                firstObject = int(
+                    data.get("beatmap", {}).get("time", {}).get("firstObject", {})
+                )
+                if liveTime <= firstObject:
+                    retryCooldown = False
+
                 # Extract mods for pp calculation
                 mods = int(data.get("play", {}).get("mods", {}).get("number", 0))
-                
                 settingsGUI.update_pp_label()
                 settingsGUI.hitDict["Mods"] = mods
+
                 # get the retry keybind
+                """ TODO: I recently found out Lazer does not have an api for keybinds, so this entire feature is more or less useless for you guys.
+                 I initially hoped that using tosu would make the code the same for both clients but upon testing i was completely wrong :p
+                 anyways, if you are running this program with lazer you are gonna get spammed with errors, sorry """
                 retryKey = (
-                    data.get("settings", {}).get("keybinds", {}).get("quickRetry", "")
+                    data.get("settings", {}).get("keybinds", {}).get("quickRetry", "`")
                 )
 
                 # logic for restarting when parameters met
                 for key in settingsGUI.hitDict:
                     if (
-                        newhits.get(key, 0) >= settingsGUI.hitDict[key] + 1
+                        liveHits.get(key, 0) >= settingsGUI.hitDict[key] + 1
                         and settingsGUI.hitDict[key] != 0
                     ):
+
                         retry(retryKey)
-                        break
 
             except Exception as e:
+                # settingsGUI.show_error_window(f"Error: {e}")
                 # print(f"Error: {e}")
                 pass
 
