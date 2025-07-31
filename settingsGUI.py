@@ -74,7 +74,6 @@ def update_pp_label():
 
 def get_pp_from_input():
     pp_url = f"http://127.0.0.1:24050/api/calculate/pp?n100={hitDict['100']}&n50={hitDict['50']}&nMisses={hitDict['0']}&mods={hitDict['Mods']}"
-    
     try:
         response = requests.get(pp_url)
         responseData = response.json()
